@@ -3,7 +3,7 @@ uvicorn
 pydantic
 python-dotenv
 redis
-google-generativeai
+google-genai
 beautifulsoup4
 requests
 chromadb

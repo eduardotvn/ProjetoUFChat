@@ -86,7 +86,6 @@ def update_news():
     if len(noticias) > 5:
         noticias = noticias[:5]
     
-    # Explicit check for first-time creation or updates
     if not os.path.exists(JSON_PATH):
         with open(JSON_PATH, "w", encoding='utf-8') as f:
             json.dump(noticias, f, ensure_ascii=False, indent=4)
@@ -111,3 +110,5 @@ def update_news():
 
     for n in noticias:
         print(f"{n['data']} - {n['titulo']} -> {n['link']}")
+
+update_news()

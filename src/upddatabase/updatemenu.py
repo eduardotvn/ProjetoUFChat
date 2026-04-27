@@ -24,7 +24,7 @@ def obter_pdf_ru():
         print("Nenhum botão encontrado no HTML!")
         return None
 
-    botao_recente = botoes[-1]
+    botao_recente = botoes[0]
 
     url_intermediaria = botao_recente.get("href")
 
@@ -50,3 +50,5 @@ def update_menu():
         print(f"Cardápio atualizado: {link}")
     else:
         print("Cardápio já está atualizado.")
+
+update_menu()

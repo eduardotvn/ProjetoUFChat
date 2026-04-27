@@ -126,3 +126,5 @@ def update_docs():
             index_json_file(JSON_PATH, "Links de Documentos")
         else:
             print("Editais sem atualização.")
+
+update_docs()

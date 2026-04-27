@@ -3,7 +3,7 @@ import requests
 import json
 import re 
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 import os 
 import time 
 
@@ -13,8 +13,8 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY not found in environment variables.")
 
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+client = genai.Client(api_key=GEMINI_API_KEY)
+MODEL_ID = 'gemini-2.0-flash'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SAVE_JSON_PATH = os.path.join(BASE_DIR, "scraped_data", "scrapping_ufca.json")
@@ -167,7 +167,7 @@ def atualizar_unidades_academicas():
     
     prompt = f"Use as informações a seguir para produzir um JSON, e retorne APENAS O JSON em sua resposta, contendo as seguintes informações: o nome da instituição, o contato, o que ele faz, cursos e endereço. Exemplo: 'CCAB Contato' : 'Contato do CCAB é...', 'CCAB Endereço' : 'O endereço do CCAB é...', 'CCAB Cursos': 'Os cursos do CCAB são...'. Instituição: {instituicao}, informações: {texto}"
     
-    response = model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
+    response = client.models.generate_content(model=MODEL_ID, contents=prompt, config={"response_mime_type": "application/json"})
     try:
         data = json.loads(response.text)
         all_data.update(data)
@@ -205,7 +205,7 @@ def atualizar_orgaos_complementares():
     
     prompt = f"Use as informações abaixo para produzir um JSON, e retorne APENAS O JSON em sua resposta, contendo as seguintes informações: o nome da instituição, o contato, o que ele faz e endereço. Preencha pelo menos 3 palavras semânticamente parecidas e o nome da instituição nas keys, pois serão usados em RAG. Exemplo: 'CCAB Contato, Telefone, Email' : 'Contato do CCAB é...', 'CCAB Endereço, Localização, forma de chegar...' : 'O endereço do CCAB é...'. Não coloque listas nos valores das chaves do json, apenas texto. Instituição: {instituicao}, informações: {texto}"
     
-    response = model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
+    response = client.models.generate_content(model=MODEL_ID, contents=prompt, config={"response_mime_type": "application/json"})
     try:
         data = json.loads(response.text)
         all_data.update(data)

@@ -1,5 +1,5 @@
 import os
-import google.generativeai as genai
+from google import genai
 from typing import Literal
 from dotenv import load_dotenv
 
@@ -9,9 +9,8 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY not found in environment variables.")
 
-genai.configure(api_key=GEMINI_API_KEY)
-
-model = genai.GenerativeModel('gemini-3.1-flash')
+client = genai.Client(api_key=GEMINI_API_KEY)
+MODEL_ID = 'gemini-2.0-flash'
 
 Category = Literal[
     "Dúvidas Gerais e Contatos",
@@ -36,14 +35,15 @@ def route_request(user_message: str) -> Category:
         "Responda apenas com o nome da categoria, sem explicações adicionais."
     )
 
-    response = model.generate_content(
-        user_message,
-        generation_config=genai.types.GenerationConfig(
-            candidate_count=1,
-            max_output_tokens=20,
-            temperature=0.1,  
-        ),
-        system_instruction=system_instruction
+    response = client.models.generate_content(
+        model=MODEL_ID,
+        contents=user_message,
+        config={
+            'candidate_count': 1,
+            'max_output_tokens': 20,
+            'temperature': 0.1,
+            'system_instruction': system_instruction
+        }
     )
     
     category = response.text.strip()
