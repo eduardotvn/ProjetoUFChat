@@ -25,7 +25,7 @@ async def handle_user_request(request: UserRequest):
         
         agent_response = await generate_agent_response(user_id, request.message)
         
-        add_message_pair(request.phone_number, request.message, agent_response)
+        add_message_pair(user_id, request.message, agent_response)
         
         return {
             "status": "success",

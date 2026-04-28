@@ -18,9 +18,8 @@ redis_client = redis.Redis(
     decode_responses=True
 )
 
-def add_message_pair(phone_number: str, user_message: str, agent_response: str) -> str:
+def add_message_pair(user_id: str, user_message: str, agent_response: str) -> str:
 
-    user_id = generate_user_id(phone_number)
     key = f"chat_history:{user_id}"
     
     pair = {
